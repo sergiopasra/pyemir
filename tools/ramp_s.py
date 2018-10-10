@@ -26,7 +26,7 @@ def process_images(images, nreject=3):
     gain = ref_hdr['gain']
     ron = ref_hdr['ron']
 
-    gain = main(0.1, gain)
+    gain = max(0.1, gain)
 
     exptime = ref_hdr['exptime']
     print(toper, nrdil, nrdil_nd, nfrsec, exptime)
@@ -49,7 +49,7 @@ def process_images(images, nreject=3):
     # print(m1.dtype)
     # print(m2.dtype)
     # print(m3.dtype)
-    hm1 = fits.PrimaryHDU(m0)
+    hm1 = fits.PrimaryHDU(m0, header=ref_hdr)
     hm2 = fits.ImageHDU(m1)
     hm3 = fits.ImageHDU(m2)
     hm4 = fits.ImageHDU(m3)
