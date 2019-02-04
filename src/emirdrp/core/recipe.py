@@ -88,8 +88,68 @@ class EmirRecipe(recipes.BaseRecipe):
         return flow
 
     def init_filters(self, rinput, ins='EMIR'):
+
+        a = rinput.attrs()
+        b = rinput.stored()
+
+        for k,v in a.items():
+            vv = b[k]
+            #print(k,v,vv.type)
+
+        #print(rinput.attrs())
+        #print(rinput.stored())
+
+        tree = _Ft(prods.MasterBadPixelMask)
+        node_bias = _Ft(prods.MasterBias)
+        tree.add(node_bias)
+        node_dark = _Ft(prods.MasterDark)
+        node_bias.add(node_dark)
+        node_dark.add(_Ft(prods.MasterIntensityFlat, children=[_Ft(prods.MasterSky)]))
+        node_dark.add(_Ft(prods.MasterSpectralFlat, children=[_Ft(prods.SkySpectrum)]))
+
+        def func(tree):
+            a = rinput.attrs()
+            b = rinput.stored()
+            for v in b.values():
+                # print('b', v.type, tree.content)
+                if isinstance(v.type, tree.content):
+                    val = a[v.dest]
+                    # print(v.dest, v.optional, a[v.dest])
+                    if val is None:
+                        if v.optional:
+                            print('Nothing')
+                            break
+                        else:
+                            raise ValueError('undefined')
+                    else:
+                        print('Node')
+                        break
+
+                    #print('c', v, tree.content)
+            # print(tree.content)
+
+        visit(tree, func)
+
         getters = self.get_filters()
         return self.init_filters_generic(rinput, getters, ins)
 
     def aggregate_result(self, result, rinput):
         return result
+
+
+class _Ft(object):
+    def __init__(self, content, children=None):
+        self.content = content
+        if children is None:
+            self.children = []
+        else:
+            self.children = children
+
+    def add(self, node):
+        self.children.append(node)
+
+
+def visit(tree, func):
+    func(tree)
+    for c in tree.children:
+        visit(c, func)
