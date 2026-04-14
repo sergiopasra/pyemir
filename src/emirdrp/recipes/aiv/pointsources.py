@@ -1,5 +1,5 @@
 #
-# Copyright 2013-2025 Universidad Complutense de Madrid
+# Copyright 2013-2026 Universidad Complutense de Madrid
 #
 # This file is part of PyEmir
 #
@@ -88,13 +88,6 @@ class TestPointSourceRecipe(EmirRecipe):
             raise RecipeError(error)
 
         data = hdulist[0].data
-
-        # Copy needed in numpy 1.7
-        # This seems already bitswapped??
-        # FIXME: check this works offline/online
-        # ndata = data.byteswap().newbyteorder()
-        # data = data.byteswap(inplace=True).newbyteorder()
-
         snr_detect = 5.0
         fwhm = 4.0
         npixels = 15

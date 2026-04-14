@@ -1,5 +1,5 @@
 #
-# Copyright 2011-2025 Universidad Complutense de Madrid
+# Copyright 2011-2026 Universidad Complutense de Madrid
 #
 # This file is part of PyEmir
 #
@@ -1076,7 +1076,7 @@ class DirectImageCommon(EmirRecipe):
         # sex.run(filename)
 
         data_res = fits.getdata(filename)
-        data_res = data_res.byteswap().newbyteorder()
+        data_res = data_res.byteswap().view(data_res.dtype.newbyteorder())
         bkg = sep.Background(data_res)
         data_sub = data_res - bkg
 

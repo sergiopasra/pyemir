@@ -55,7 +55,7 @@ def comp_centroid(
     region = bounding_box.slice
     ref_x = region[1].start
     ref_y = region[0].start
-    logger.debug("region ofset is %s, %s", ref_x, ref_y)
+    logger.debug("region offset is %s, %s", ref_x, ref_y)
     subimage = data[region].copy()
     bkg = sep.Background(subimage)
     data_sub = subimage - bkg
@@ -490,7 +490,7 @@ def compute_off_rotation(
 
     swapped_code = (sys.byteorder == "little") and ">" or "<"
     if data.dtype.byteorder == swapped_code:
-        data = data.byteswap().newbyteorder()
+        data = data.byteswap().view(data.dtype.newbyteorder())
 
     logger.info("we have %s slits", len(csu_conf.slits))
     refslits = [

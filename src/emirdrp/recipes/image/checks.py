@@ -1,5 +1,5 @@
 #
-# Copyright 2011-2025 Universidad Complutense de Madrid
+# Copyright 2011-2026 Universidad Complutense de Madrid
 #
 # This file is part of PyEmir
 #
@@ -71,7 +71,7 @@ def check_photometry(
     basename = "result_i%0d.fits" % step
 
     data_res = fits.getdata(basename)
-    data_res = data_res.byteswap().newbyteorder()
+    data_res = data_res.byteswap().view(data_res.dtype.newbyteorder())
     bkg = sep.Background(data_res)
     data_sub = data_res - bkg
 
@@ -112,7 +112,7 @@ def check_photometry(
             airmasses.append(header["airmass"])
             times.append(header["tstamp"])
             data_i = hdul[0].data
-            data_i = data_i.byteswap().newbyteorder()
+            data_i = data_i.byteswap().view(data_i.dtype.newbyteorder())
             bkg_i = sep.Background(data_i)
             data_sub_i = data_i - bkg_i
         # objects_i = sep.extract(data_sub_i, 1.5, err=bkg_i.globalrms, mask=wmap)
